@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QImage>
+#include <QImageReader>
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
@@ -21,6 +22,8 @@
 #include <QDropEvent>
 #include <QUrl>
 #include <time.h>
+
+#include <sstream>
 
 #ifdef _MSC_VER
 #define _USE_MATH_DEFINES
@@ -74,6 +77,9 @@ private:
 
     QImage *inputImage;
     QImage *outputImage;
+    std::vector<QImage> outArray;
+    QImageReader *reader;
+    QImage::Format format;
 
     QProgressBar* progressBar;
     QLabel* lblDeconvolutionTime;
@@ -117,6 +123,8 @@ private slots:
     void imageSizeLimitChanged(int value);
     void tvIterationsCountChanged(int value);
     void previewMethodChanged(int value);
+
+    std::string itos(int i);
 
 };
 

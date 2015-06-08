@@ -11,13 +11,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp \
     DeconvolutionTool.cpp \
     WorkerThread.cpp \
     ImageUtils.cpp \
     MathUtlis.cpp \
     HelpDialog.cpp \
-    CheckUpdatesThread.cpp
+    CheckUpdatesThread.cpp \
+    MainWindow.cpp
 
 HEADERS  += MainWindow.h \
     FFTW/fftw3.h \

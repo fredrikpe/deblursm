@@ -16,6 +16,7 @@ public:
     explicit WorkerThread(QObject *parent = 0);
     int initFFT(const QImage *inputImage);
     void deconvolutionRequest(QImage *inputImage, QImage *outputImage, Blur *blur);
+    void justDoit(QImage *inputImage, QImage *outputImage, Blur* blur);
     DeconvolutionTool* getDeconvolutionTool();
 
 

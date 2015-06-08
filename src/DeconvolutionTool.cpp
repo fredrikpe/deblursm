@@ -5,7 +5,7 @@ DeconvolutionTool::DeconvolutionTool(QObject* parent):QObject(parent) {
     threadsCount = QThread::idealThreadCount() > 0 ? QThread::idealThreadCount() : 2;
     qDebug("Init Multi-Threading with threads count: %d", threadsCount);
     fftw_plan_with_nthreads(threadsCount);
-    tvIterationsCount = 500;
+    tvIterationsCount = 25;
     previewMethod = 0;
 
     inputImageMatrix = NULL;

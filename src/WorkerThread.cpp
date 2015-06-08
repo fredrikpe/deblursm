@@ -12,6 +12,21 @@ int WorkerThread::initFFT(const QImage *inputImage) {
     return deconvolutionTool->getThreadsCount();
 }
 
+void WorkerThread::justDoit(QImage *inputImage, QImage *outputImage, Blur* blur) {
+    this->blur = blur;
+    this->inputImage = inputImage;
+    this->outputImage = outputImage;
+    bool result = deconvolutionTool->doDeconvolution(inputImage, outputImage, blur);
+    // if gray preivew is not canceled, start color preview
+    if (result && blur->mode != HIGH_QUALITY) {
+        blur->mode = PREVIEW_COLOR;
+        if (deconvolutionTool->doDeconvolution(inputImage, outputImage, blur)) {
+        }
+    }
+    requestCondition->wakeAll();
+}
+
+
 void WorkerThread::deconvolutionRequest(QImage *inputImage, QImage *outputImage, Blur* blur) {
     this->blur = blur;
     this->inputImage = inputImage;

@@ -1,3 +1,4 @@
+
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     inputImage = NULL;
     outputImage = NULL;
+    reader = NULL;
 
     createActions();
     initControls();
@@ -131,7 +133,12 @@ void MainWindow::updatePreviewDeconvolution() {
 void MainWindow::updateFullDeconvolution() {
     Blur* blur = generateBlurInfo(false);
     if (inputImage) {
-        workerThread->deconvolutionRequest(inputImage, outputImage, blur);
+        workerThread->justDoit(inputImage, outputImage, blur);
+        outArray.push_back(*outputImage);
+    }
+    while (reader->read(inputImage)) {
+        workerThread->justDoit(inputImage, outputImage, blur);
+        outArray.push_back(*outputImage);
     }
 }
 
@@ -170,7 +177,7 @@ void MainWindow::motionLengthChanged() {
 
 void MainWindow::motionAngleChanged() {
     motionAngle = ui->sliderMotionAngle->value();
-    ui->labelMotionAngle->setText(QString::number(motionAngle) + "°");
+    ui->labelMotionAngle->setText(QString::number(motionAngle) + "ï¿½");
     updatePreviewDeconvolution();
 }
 
@@ -265,7 +272,12 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::openFile(QString fileName) {
     delete(inputImage);
     delete(outputImage);
-    inputImage = new QImage(fileName);
+    delete(reader);
+    outArray.clear();
+    inputImage = new QImage();
+    reader 	= new QImageReader(fileName);
+    format = reader->imageFormat();
+    reader->read(inputImage);
 
     if (inputImage->isNull()) {
         QMessageBox::information(this, tr("Smart Deblur"),
@@ -324,10 +336,27 @@ void MainWindow::open() {
 
 void MainWindow::save() {
     QString fileName = QFileDialog::getSaveFileName(this,
-                                                    tr("Save File"), QDir::currentPath(),tr("Images (*.png *.jpg)"));
+                                                    tr("Save File"), QDir::currentPath(),tr("Images (*.gif *.png *.jpg)"));
+
+    QString a;
+    QString fn;
     if (!fileName.isEmpty()) {
-        outputImage->save(fileName);
+        for (int i=0;i<outArray.size();i++) {
+            fn.clear();
+            fn.append(fileName);
+            a.clear();
+            a.setNum(i);
+            a.append(".bmp");
+            fn.append(a);
+            outArray[i].save(fn);
+        }
     }
+}
+
+std::string MainWindow::itos(int i){
+    std::stringstream ss;
+    ss<<i;
+    return ss.str();
 }
 
 void MainWindow::zoomIn() {
