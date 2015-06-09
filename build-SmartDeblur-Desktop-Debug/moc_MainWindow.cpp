@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -54,6 +54,8 @@ static const uint qt_meta_data_MainWindow[] = {
      433,  400,   11,   11, 0x08,
      463,  400,   11,   11, 0x08,
      503,  501,  489,   11, 0x08,
+     513,  501,   11,   11, 0x08,
+     533,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -72,7 +74,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "imageSizeLimitChanged(int)\0"
     "tvIterationsCountChanged(int)\0"
     "previewMethodChanged(int)\0std::string\0"
-    "i\0itos(int)\0"
+    "i\0itos(int)\0setClusterSize(int)\0"
+    "newCluster()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -106,6 +109,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 22: _t->previewMethodChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 23: { std::string _r = _t->itos((*reinterpret_cast< int(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< std::string*>(_a[0]) = _r; }  break;
+        case 24: _t->setClusterSize((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 25: _t->newCluster(); break;
         default: ;
         }
     }
@@ -143,9 +148,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 26;
     }
     return _id;
 }

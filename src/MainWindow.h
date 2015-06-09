@@ -81,6 +81,8 @@ private:
     QImageReader *reader;
     QImage::Format format;
 
+    int clusterSize;
+
     QProgressBar* progressBar;
     QLabel* lblDeconvolutionTime;
     QLabel* lblThreadsCount;
@@ -125,6 +127,8 @@ private slots:
     void previewMethodChanged(int value);
 
     std::string itos(int i);
+    void setClusterSize(int i);
+    void newCluster();
 
 };
 

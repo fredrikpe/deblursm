@@ -86,6 +86,10 @@ public:
     QLabel *label_10;
     QLabel *label_11;
     QComboBox *previewMethodComboBox;
+    QFrame *frame_7;
+    QLabel *label_15;
+    QSpinBox *csizeQSpin;
+    QLabel *label_16;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
     QStatusBar *statusBar;
@@ -112,8 +116,9 @@ public:
         centralWidget->setAcceptDrops(false);
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(2);
-        gridLayout->setContentsMargins(3, 3, 3, 3);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(3, 3, 3, 3);
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabWidget->setMaximumSize(QSize(16777215, 140));
@@ -424,6 +429,35 @@ public:
         previewMethodComboBox = new QComboBox(frame_6);
         previewMethodComboBox->setObjectName(QString::fromUtf8("previewMethodComboBox"));
         previewMethodComboBox->setGeometry(QRect(98, 58, 70, 22));
+        frame_7 = new QFrame(tab_2);
+        frame_7->setObjectName(QString::fromUtf8("frame_7"));
+        frame_7->setGeometry(QRect(340, 0, 173, 110));
+        frame_7->setStyleSheet(QString::fromUtf8("QFrame  {background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(165, 206, 255, 255), stop:0.744318 rgba(219, 240, 255, 255))}\n"
+"\n"
+"QLabel {background-color: none;}\n"
+"\n"
+""));
+        frame_7->setFrameShape(QFrame::NoFrame);
+        frame_7->setFrameShadow(QFrame::Sunken);
+        label_15 = new QLabel(frame_7);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+        label_15->setGeometry(QRect(0, 90, 174, 21));
+        label_15->setFont(font);
+        label_15->setStyleSheet(QString::fromUtf8("background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(165, 206, 255, 255), stop:0.744318 rgba(219, 240, 255, 255))\n"
+""));
+        label_15->setFrameShape(QFrame::Box);
+        label_15->setFrameShadow(QFrame::Sunken);
+        label_15->setAlignment(Qt::AlignCenter);
+        csizeQSpin = new QSpinBox(frame_7);
+        csizeQSpin->setObjectName(QString::fromUtf8("csizeQSpin"));
+        csizeQSpin->setGeometry(QRect(9, 27, 81, 22));
+        csizeQSpin->setMinimumSize(QSize(81, 0));
+        csizeQSpin->setMinimum(3);
+        csizeQSpin->setMaximum(1000);
+        csizeQSpin->setValue(100);
+        label_16 = new QLabel(frame_7);
+        label_16->setObjectName(QString::fromUtf8("label_16"));
+        label_16->setGeometry(QRect(7, 7, 161, 16));
         tabWidget->addTab(tab_2, QString());
 
         gridLayout->addWidget(tabWidget, 0, 0, 1, 1);
@@ -498,6 +532,8 @@ public:
          << QApplication::translate("MainWindow", "Wiener", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "Tikhonov", 0, QApplication::UnicodeUTF8)
         );
+        label_15->setText(QApplication::translate("MainWindow", "GIF deblur", 0, QApplication::UnicodeUTF8));
+        label_16->setText(QApplication::translate("MainWindow", "Cluster size", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

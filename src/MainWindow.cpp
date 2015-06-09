@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     inputImage = NULL;
     outputImage = NULL;
     reader = NULL;
+    clusterSize = 10; // Warning, not neccessarily displayed as such in iu
 
     createActions();
     initControls();
@@ -132,13 +133,20 @@ void MainWindow::updatePreviewDeconvolution() {
 
 void MainWindow::updateFullDeconvolution() {
     Blur* blur = generateBlurInfo(false);
+    int c = 0;
     if (inputImage) {
         workerThread->justDoit(inputImage, outputImage, blur);
         outArray.push_back(*outputImage);
+        c++;
     }
     while (reader->read(inputImage)) {
-        workerThread->justDoit(inputImage, outputImage, blur);
-        outArray.push_back(*outputImage);
+        if (c < clusterSize) {
+            workerThread->justDoit(inputImage, outputImage, blur);
+            outArray.push_back(*outputImage);
+            c++;
+        } else {
+            return newCluster();
+        }
     }
 }
 
@@ -282,6 +290,54 @@ void MainWindow::openFile(QString fileName) {
     if (inputImage->isNull()) {
         QMessageBox::information(this, tr("Smart Deblur"),
                                  tr("Cannot load %1.").arg(fileName));
+        return;
+    }
+
+    // Resize image if it's necessary
+    int width = inputImage->width();
+    int height = inputImage->height();
+
+    if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+        double resizeRatio = qMin(MAX_IMAGE_DIMENSION/width, MAX_IMAGE_DIMENSION/height);
+        width = width*resizeRatio;
+        height = height*resizeRatio;
+
+        width += width % 2;
+        height += height % 2;
+
+        inputImage = new QImage(inputImage->scaled(
+                                    width, height,
+                                    Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+        QMessageBox::information(this, tr("Smart Deblur"),
+                                 tr("Image was resized to %1 * %2 for performance reasons")
+                                 .arg(width).arg(height));
+    }
+
+    // Crop image if sizes are odd
+    if (width%2 != 0 || height%2 !=0) {
+        width -= width % 2;
+        height -= height % 2;
+        inputImage = new QImage(inputImage->copy(0,0, width, height));
+    }
+
+    lblImageSize->setText(tr(" Image Size: %1 x %2 ").arg(inputImage->width()).arg(inputImage->height()));
+
+    ui->btnSave->setEnabled(true);
+    ui->btnShowOriginal->setEnabled(true);
+
+    outputImage = new QImage(inputImage->width(), inputImage->height(), QImage::Format_RGB32);
+    lblThreadsCount->setText(tr(" Threads: %1 ").arg(workerThread->initFFT(inputImage)));
+    imageLabel->setPixmap(QPixmap::fromImage(*inputImage));
+    // updateFullDeconvolution();
+    ui->checkBoxFitToWindow->setChecked(true);
+    fitToWindow();
+}
+
+void MainWindow::newCluster() {
+    if (inputImage->isNull()) {
+        QMessageBox::information(this, tr("Smart Deblur"),
+                                 tr("What the F"));
         return;
     }
 
@@ -476,6 +532,11 @@ void MainWindow::createActions() {
     connect(ui->imageSizeLimitSpinBox, SIGNAL(valueChanged(int)), SLOT(imageSizeLimitChanged(int)));
     connect(ui->tvIterationsCountSpinBox, SIGNAL(valueChanged(int)), SLOT(tvIterationsCountChanged(int)));
     connect(ui->previewMethodComboBox, SIGNAL(currentIndexChanged(int)), SLOT(previewMethodChanged(int)));
+    connect(ui->csizeQSpin, SIGNAL(valueChanged(int)), SLOT(setClusterSize(int)));
+}
+
+void MainWindow::setClusterSize(int i) {
+    clusterSize = i;
 }
 
 void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor) {
