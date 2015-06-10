@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     inputImage = NULL;
     outputImage = NULL;
     reader = NULL;
-    clusterSize = 10; // Warning, not neccessarily displayed as such in iu
+    clusterSize = 100; // Warning, not neccessarily displayed as such in iu
 
     createActions();
     initControls();
@@ -247,7 +247,7 @@ void MainWindow::defectTypeChanged(int type) {
         ui->sliderPSNR->move( ui->sliderPSNR->x(), yFocus2);
     }
 
-    updateFullDeconvolution();
+    //updateFullDeconvolution();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
